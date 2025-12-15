@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Payment Success</title>
+
+<style>
+body{
+  background:#121212;
+  color:#f0f0f0;
+  font-family:Segoe UI,Tahoma;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:100vh;
+}
+
+.box{
+  background:#1f1f1f;
+  padding:40px;
+  border-radius:14px;
+  box-shadow:0 0 25px rgba(255,61,0,0.4);
+  text-align:center;
+  width:380px;
+}
+
+h1{color:#00e676;}
+.amount{
+  font-size:1.4rem;
+  margin:15px 0;
+  color:#ff3d00;
+}
+.method{
+  color:#ffb74d;
+  margin-bottom:10px;
+}
+.msg{color:#aaa;}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+  <h1>Payment Successful ✅</h1>
+  <div class="amount" id="amt">Amount Paid: ₹0</div>
+  <div class="method" id="method"></div>
+  <p class="msg">Redirecting to confirmation page...</p>
+</div>
+
+<script>
+const bookingData = JSON.parse(sessionStorage.getItem("bookingData"));
+
+if(bookingData){
+  document.getElementById("amt").textContent =
+    "Amount Paid: ₹" + bookingData.totalAmount;
+
+  document.getElementById("method").textContent =
+    "Paid via: " + bookingData.paymentMethod;
+}
+
+setTimeout(()=>{
+  window.location.href="confirmation_page.html";
+},5000);
+</script>

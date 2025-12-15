@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Payment</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+  background:#121212;
+  color:#fff;
+  font-family:Segoe UI;
+  margin:0;
+}
+h1{text-align:center;color:#ff3d00;margin:25px 0;}
+
+.wrap{display:flex;justify-content:center;}
+.box{
+  width:460px;
+  background:#1f1f1f;
+  padding:25px;
+  border-radius:16px;
+  box-shadow:0 0 25px rgba(255,61,0,.4);
+}
+
+.option,.sub{
+  background:#333;
+  padding:14px;
+  border-radius:10px;
+  margin-bottom:14px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  cursor:pointer;
+}
+
+.circle{
+  width:14px;height:14px;
+  border-radius:50%;
+  border:2px solid #777;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:10px;
+}
+.circle.active{
+  background:#2ecc71;
+  border-color:#2ecc71;
+}
+.circle.active::after{content:"✔";color:#fff;}
+
+.hidden{display:none;}
+
+.card-form{
+  max-width:360px;
+  margin:15px auto;
+}
+.card-form input{
+  width:100%;
+  padding:12px;
+  margin-bottom:12px;
+  border:none;
+  border-radius:8px;
+  background:#333;
+  color:white;
+  text-align:center;
+}
+
+.qr{
+  width:180px;
+  margin:20px auto;
+  background:#fff;
+  padding:10px;
+  border-radius:8px;
+}
+.qr img{width:100%;}
+
+.btn{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:30px;
+  background:#ff3d00;
+  color:#fff;
+  font-size:1.1rem;
+  cursor:pointer;
+  margin-top:20px;
+}
+
+.note{text-align:center;color:#aaa;margin-top:10px;}
+</style>
+</head>
+
+<body>
+
+<h1>Payment Options</h1>
+
+<div class="wrap">
+<div class="box">
+
+<div class="option" onclick="showCard()">
+💳 Credit / Debit Card
+<div class="circle" id="cardC"></div>
+</div>
+
+<div class="option" onclick="showUPI()">
+📱 UPI
+<div class="circle" id="upiC"></div>
+</div>
+
+<div id="cardTypes" class="hidden">
+  <div class="sub" onclick="selectCard('Credit Card')">
+    Credit Card <div class="circle" id="cc"></div>
+  </div>
+  <div class="sub" onclick="selectCard('Debit Card')">
+    Debit Card <div class="circle" id="dc"></div>
+  </div>
+</div>
+
+<div id="cardForm" class="hidden card-form">
+  <input placeholder="Card Number">
+  <input placeholder="Name on Card">
+  <input placeholder="MM / YY">
+  <input placeholder="CVV">
+</div>
+
+<div id="upiBox" class="hidden">
+  <div class="sub" onclick="selectUPI('GPay')">
+    GPay <div class="circle" id="gpay"></div>
+  </div>
+  <div class="sub" onclick="selectUPI('PhonePe')">
+    PhonePe <div class="circle" id="phonepe"></div>
+  </div>
+  <div class="sub" onclick="selectUPI('Paytm')">
+    Paytm <div class="circle" id="paytm"></div>
+  </div>
+
+  <div class="qr">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=FAKE_UPI_PAYMENT">
+  </div>
+</div>
+
+<button id="payBtn" class="btn hidden" onclick="goPaymentSuccess()">
+  Confirm Payment
+</button>
+
+<p id="note" class="note"></p>
+
+</div>
+</div>
+
+<script>
+/* RECEIVE BOOKING DATA */
+const bookingData = JSON.parse(sessionStorage.getItem("bookingData"));
+
+if(!bookingData){
+  alert("Booking data missing!");
+  window.location.href="homepage.html";
+}
+
+let selectedMethod = "";
+
+/* RESET UI */
+function reset(){
+  document.querySelectorAll('.circle').forEach(c=>c.classList.remove("active"));
+  cardTypes.classList.add("hidden");
+  cardForm.classList.add("hidden");
+  upiBox.classList.add("hidden");
+  payBtn.classList.add("hidden");
+  note.textContent="";
+}
+
+/* CARD FLOW */
+function showCard(){
+  reset();
+  cardC.classList.add("active");
+  cardTypes.classList.remove("hidden");
+  selectedMethod = "Card";
+}
+
+function selectCard(type){
+  cc.classList.remove("active");
+  dc.classList.remove("active");
+  (type.includes("Credit") ? cc : dc).classList.add("active");
+
+  cardForm.classList.remove("hidden");
+  payBtn.classList.remove("hidden");
+
+  selectedMethod = type;
+  note.textContent = type + " selected";
+}
+
+/* UPI FLOW */
+function showUPI(){
+  reset();
+  upiC.classList.add("active");
+  upiBox.classList.remove("hidden");
+  payBtn.classList.remove("hidden");
+  selectedMethod = "UPI";
+}
+
+function selectUPI(app){
+  [gpay,phonepe,paytm].forEach(e=>e.classList.remove("active"));
+  document.getElementById(app.toLowerCase()).classList.add("active");
+
+  selectedMethod = "UPI - " + app;
+  note.textContent = app + " selected";
+}
+
+/* FINAL CONFIRM */
+function goPaymentSuccess(){
+  bookingData.paymentMethod = selectedMethod;
+  sessionStorage.setItem("bookingData", JSON.stringify(bookingData));
+  window.location.href = "payment_successful.html";
+}
+</script>
+
+</body>
+</html>

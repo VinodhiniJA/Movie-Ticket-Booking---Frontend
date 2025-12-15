@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Movie Details - CineBook</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: #121212;
+      color: #f0f0f0;
+      line-height: 1.6;
+    }
+
+    a {
+      color: #ff3d00;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      background-color: #1f1f1f;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #ff3d00;
+      letter-spacing: 2px;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 25px;
+    }
+
+    nav ul li {
+      font-weight: 600;
+    }
+
+    main {
+      margin-top: 30px;
+    }
+
+    .movie-details {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .poster {
+      max-width: 350px;
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(255, 61, 0, 0.4);
+      overflow: hidden;
+    }
+
+    .poster img {
+      width: 100%;
+      display: block;
+    }
+
+    .details {
+      flex: 1 1 500px;
+    }
+
+    .details h1 {
+      font-size: 2.8rem;
+      color: #ff3d00;
+      margin-bottom: 15px;
+    }
+
+    .genres,
+    .rating,
+    .duration {
+      margin-bottom: 10px;
+      color: #ccc;
+    }
+
+    .rating {
+      color: #ffd700;
+      font-weight: 700;
+    }
+
+    .synopsis {
+      margin: 20px 0;
+      color: #ddd;
+    }
+
+    .cast {
+      margin-bottom: 25px;
+      color: #bbb;
+    }
+
+    .showtimes {
+      background: #1f1f1f;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(255, 61, 0, 0.3);
+    }
+
+    .showtimes h2 {
+      color: #ff3d00;
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 6px;
+      font-weight: 600;
+    }
+
+    select {
+      width: 100%;
+      padding: 10px 15px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      background: #333;
+      color: #fff;
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
+
+    .book-now {
+      background: #ff3d00;
+      color: #fff;
+      padding: 14px 35px;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 30px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .book-now:hover {
+      background: #e63600;
+    }
+
+    footer {
+      background: #1f1f1f;
+      padding: 20px 0;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #777;
+      margin-top: 60px;
+    }
+
+    @media (max-width: 900px) {
+      .movie-details {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .details h1 {
+        font-size: 2rem;
+      }
+      .book-now {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="container">
+  <div class="logo">CineBook</div>
+  <nav>
+    <ul>
+      <li><a href="homepage.html">Home</a></li>
+      <li><a href="movies_listing_page.html">Movies</a></li>
+      <li><a href="contact_page.html">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main class="container">
+  <div class="movie-details">
+
+    <div class="poster">
+      <img id="moviePoster" src="" alt="Movie Poster">
+    </div>
+
+    <div class="details">
+      <h1 id="movieTitle"></h1>
+      <div class="genres" id="movieGenres"></div>
+      <div class="rating" id="movieRating"></div>
+      <div class="duration" id="movieDuration"></div>
+      <p class="synopsis" id="movieSynopsis"></p>
+      <div class="cast" id="movieCast"></div>
+
+      <div class="showtimes">
+        <h2>Select Showtime</h2>
+
+        <label>Theater</label>
+        <select id="theaterSelect"></select>
+
+        <label>Date</label>
+        <select id="showDate"></select>
+
+        <label>Time</label>
+        <select id="showTime"></select>
+
+        <button class="book-now" id="bookNowBtn">Book Now</button>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  &copy; 2024 CineBook. All rights reserved.
+</footer>
+
+<script>
+  const movie = {
+    title: "The Great Adventure",
+    genres: "Action, Adventure",
+    rating: 8.5,
+    duration: "2h 15m",
+    synopsis: "An epic journey unfolds as heroes battle against all odds.",
+    cast: "John Doe, Jane Smith, Alex Johnson",
+    poster: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
+    showtimes: {
+      "2024-06-01": ["12:00 PM", "3:00 PM", "6:30 PM"],
+      "2024-06-02": ["1:00 PM", "4:00 PM", "7:30 PM"]
+    }
+  };
+
+  const theaters = [
+    "Cineplex Downtown",
+    "Grand Cinema",
+    "Movie Palace",
+    "Star Theater"
+  ];
+
+  function loadMovieDetails() {
+    movieTitle.textContent = movie.title;
+    movieGenres.textContent = movie.genres;
+    movieRating.textContent = `★ ${movie.rating}`;
+    movieDuration.textContent = movie.duration;
+    movieSynopsis.textContent = movie.synopsis;
+    movieCast.innerHTML = `<strong>Cast:</strong> ${movie.cast}`;
+    moviePoster.src = movie.poster;
+
+    Object.keys(movie.showtimes).forEach(date => {
+      const opt = document.createElement("option");
+      opt.value = date;
+      opt.textContent = new Date(date).toDateString();
+      showDate.appendChild(opt);
+    });
+
+    populateShowTimes(showDate.value);
+  }
+
+  function populateShowTimes(date) {
+    showTime.innerHTML = "";
+    movie.showtimes[date].forEach(time => {
+      const opt = document.createElement("option");
+      opt.value = time;
+      opt.textContent = time;
+      showTime.appendChild(opt);
+    });
+  }
+
+  theaters.forEach(t => {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    theaterSelect.appendChild(opt);
+  });
+
+  showDate.addEventListener("change", e => populateShowTimes(e.target.value));
+
+  // session storage
+  bookNowBtn.addEventListener("click", () => {
+
+    const bookingData = {
+      movie: movie.title,
+      theater: theaterSelect.value,
+      date: showDate.value,
+      time: showTime.value,
+      seatPrice: 210,
+      seats: [],
+      total: 0
+    };
+
+    sessionStorage.setItem("bookingData", JSON.stringify(bookingData));
+    window.location.href = "seat_selection.html";
+  });
+
+  window.onload = loadMovieDetails;
+</script>
+
+</body>
+</html>

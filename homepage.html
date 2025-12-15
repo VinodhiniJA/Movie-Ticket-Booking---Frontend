@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Movie Ticket Booking - CineBook</title>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
+    body{background:#121212;color:#f0f0f0;line-height:1.6}
+    a{color:#ff3d00;text-decoration:none}
+
+    .container{max-width:1200px;margin:auto;padding:0 20px}
+
+    header{background:#1f1f1f;padding:15px 0;display:flex;justify-content:space-between;align-items:center}
+    .logo{font-size:1.8rem;font-weight:bold;color:#ff3d00;letter-spacing:2px;cursor:pointer}
+    nav ul{list-style:none;display:flex;gap:25px}
+
+    .hero{
+      position:relative;
+      background:url('https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?auto=format&fit=crop&w=1350&q=80') no-repeat center/cover;
+      height:450px;
+      display:flex;
+      align-items:center;
+      margin-bottom:40px;
+      border-radius:10px;
+      overflow:hidden
+    }
+    .hero-overlay{position:absolute;inset:0;background:rgba(0,0,0,.6)}
+    .hero-content{position:relative;padding:0 40px;max-width:600px;z-index:1}
+    .hero-content h1{font-size:3rem;margin-bottom:15px}
+    .hero-content p{font-size:1.2rem;margin-bottom:20px}
+    .btn-primary{background:#ff3d00;color:#fff;padding:12px 28px;border-radius:30px;border:none;font-size:1.1rem;cursor:pointer}
+
+    .search-bar{
+      margin:-30px auto 60px;
+      max-width:600px;
+      display:flex;
+      border-radius:30px;
+      overflow:hidden;
+      background:#fff
+    }
+    .search-bar input{flex:1;padding:14px 20px;border:none;font-size:1.1rem}
+    .search-bar button{background:#ff3d00;border:none;color:#fff;padding:0 25px}
+
+    .movies-section{margin-bottom:60px}
+    .movies-section h2{text-align:center;color:#ff3d00;font-size:2rem;margin-bottom:25px}
+    .movies-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:20px}
+    .movie-card{background:#1f1f1f;border-radius:10px;overflow:hidden;cursor:pointer}
+    .movie-card img{width:100%;height:270px;object-fit:cover}
+    .movie-info{padding:15px}
+    .movie-info h3{color:#ff3d00;margin-bottom:6px}
+    .movie-info p{color:#ccc;font-size:.9rem}
+
+    /* ABOUT SECTION */
+    .about-section{
+      background:#1f1f1f;
+      padding:40px;
+      border-radius:12px;
+      max-width:900px;
+      margin:0 auto 60px;
+      box-shadow:0 4px 15px rgba(255,61,0,.3);
+      text-align:center
+    }
+    .about-section h2{color:#ff3d00;font-size:2.2rem;margin-bottom:20px}
+    .about-section p{color:#ddd;font-size:1.1rem;line-height:1.6}
+
+    footer{background:#1f1f1f;padding:20px;text-align:center;color:#777}
+  </style>
+</head>
+
+<body>
+
+<header class="container">
+  <div class="logo" onclick="goToMovies()">CineBook</div>
+  <nav>
+    <ul>
+      <li><a href="homepage.html">Home</a></li>
+      <li><a href="#" onclick="goToMovies()">Movies</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="contact_page.html">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<section class="hero container">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <h1>Experience the Magic<br>of Cinema</h1>
+    <p>Book tickets for the latest blockbusters and classics with ease.</p>
+    <button class="btn-primary" onclick="goToMovies()">Browse Movies</button>
+  </div>
+</section>
+
+<div class="search-bar container">
+  <input type="text" placeholder="Search movies..." />
+  <button>Search</button>
+</div>
+
+<section class="movies-section container">
+  <h2>Featured Movies</h2>
+  <div class="movies-grid" id="moviesGrid"></div>
+</section>
+
+<!-- ABOUT SECTION -->
+<section class="about-section" id="about">
+  <h2>About CineBook</h2>
+  <p>
+    CineBook is your all-in-one movie ticket booking platform designed for
+    a smooth and fast cinema experience. Discover new movies, choose your
+    favorite seats, and complete your booking effortlessly.  
+    Our goal is to make movie nights easier, faster, and more enjoyable for everyone.
+  </p>
+
+  <!-- READ MORE LINK -->
+  <a href="about_page.html" 
+     style="
+       display:inline-block;
+       margin-top:18px;
+       color:#ff3d00;
+       font-weight:600;
+       text-decoration:underline;
+       font-size:1.05rem;
+     ">
+     Read More →
+  </a>
+</section>
+
+<footer>
+  &copy; 2024 CineBook. All rights reserved.
+</footer>
+
+<script>
+const featuredMovies=[
+ {title:"The Great Adventure",genre:"Action, Adventure",poster:"https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg"},
+ {title:"Romance in Paris",genre:"Romance, Drama",poster:"https://image.tmdb.org/t/p/w500/8Y43POKjjKDGI9MH89NW0NAzzp8.jpg"},
+ {title:"Inception",genre:"Sci-Fi, Thriller",poster:"https://image.tmdb.org/t/p/w500/edv5CZvWj09upOsy2Y6IwDhK8bt.jpg"},
+ {title:"Space Odyssey",genre:"Sci-Fi, Adventure",poster:"https://image.tmdb.org/t/p/w500/9pkZesKMnblFfKxEhQx45YQ2kIe.jpg"}
+];
+
+function loadFeaturedMovies(){
+ const grid=document.getElementById("moviesGrid");
+ featuredMovies.forEach(m=>{
+  const c=document.createElement("div");
+  c.className="movie-card";
+  c.innerHTML=`<img src="${m.poster}"><div class="movie-info"><h3>${m.title}</h3><p>${m.genre}</p></div>`;
+  c.onclick=goToMovies;
+  grid.appendChild(c);
+ });
+}
+
+/* FIX – always open page 1 */
+function goToMovies(){
+ localStorage.setItem("moviesCurrentPage",1);
+ window.location.href="movies_listing_page.html";
+}
+
+window.onload=loadFeaturedMovies;
+</script>
+
+</body>
+</html>

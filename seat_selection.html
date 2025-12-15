@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Select Seats</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+  background:#121212;
+  color:#fff;
+  font-family:Segoe UI;
+  text-align:center;
+  margin:0;
+}
+
+h1{
+  color:#ff3d00;
+  margin:25px 0;
+}
+
+/* SCREEN */
+.screen{
+  background:#555;
+  margin:20px auto 30px;
+  width:65%;
+  padding:14px;
+  border-radius:10px;
+  font-weight:600;
+}
+
+/* SEATS CONTAINER */
+.seats{
+  width:65%;
+  margin:0 auto 30px;
+  display:grid;
+  grid-template-columns:repeat(8, 40px);
+  justify-content:space-between;
+  row-gap:18px;
+}
+
+/* SEAT */
+.seat{
+  width:40px;
+  height:40px;
+  border-radius:7px;
+  background:#1f8b3a;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  font-weight:600;
+}
+
+.seat.selected{ background:#ff9f00; }
+
+.seat.sold{
+  background:#cfcfcf;
+  color:#222;
+  cursor:not-allowed;
+}
+
+/* INDICATORS */
+.legend{
+  display:flex;
+  justify-content:center;
+  gap:30px;
+  margin:20px 0 30px;
+}
+.legend-item{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.box{
+  width:20px;
+  height:20px;
+  border-radius:5px;
+}
+.box.available{background:#1f8b3a;}
+.box.selected{background:#ff9f00;}
+.box.sold{background:#cfcfcf;}
+
+/* INFO */
+.info{
+  margin:20px 0;
+  font-size:1.2rem;
+}
+
+/* BUTTON */
+button{
+  background:#ff3d00;
+  color:white;
+  border:none;
+  padding:16px 55px;
+  border-radius:40px;
+  font-size:1.2rem;
+  cursor:pointer;
+}
+button:disabled{
+  background:#555;
+  cursor:not-allowed;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Select Your Seats</h1>
+
+<div class="screen">SCREEN</div>
+
+<div class="seats" id="seatContainer"></div>
+
+<div class="legend">
+  <div class="legend-item"><div class="box available"></div> Available</div>
+  <div class="legend-item"><div class="box selected"></div> Selected</div>
+  <div class="legend-item"><div class="box sold"></div> Sold</div>
+</div>
+
+<div class="info" id="infoText">
+Selected Seats: 0 | Total: ₹0
+</div>
+
+<button id="payBtn" disabled>Proceed to Pay</button>
+
+<script>
+const bookingData = JSON.parse(sessionStorage.getItem("bookingData"));
+if(!bookingData){
+  alert("Booking data missing!");
+  window.location.href="homepage.html";
+}
+
+const soldSeatsByMovie = {
+  "Fantasy Realm": [1,2,3,4,11,12,13,20,21,22],
+  "The Great Adventure": [4,5,8,9,11,12],
+  "Inception": [6,7,10,11,23,25,26],
+  "The Batman": [3,4,5,10,12,13,36,37],
+  "Finding Nemo": [10,12,14,20,21],
+  "Guardians of the Galaxy": [18,19,20,33,34,35,36],
+  "Romance in Paris": [1,2,38,39,23,34,14,15],
+  "Space Odyssey": [4,5,6,7,8,14,5,16,25,26,27],
+  "The Suicide Squad": [2,3,4,5,12,13,14,34,35,36],
+  "Thriller Night": [12,13,1,4,1,5,23,24,38,39,40]
+};
+
+const TOTAL_SEATS = 40;
+const seatPrice = bookingData.seatPrice;
+const soldSeats = soldSeatsByMovie[bookingData.movie] || [];
+
+// restore previously selected seats
+let selectedSeats = bookingData.seats ? [...bookingData.seats] : [];
+
+const seatContainer = document.getElementById("seatContainer");
+const infoText = document.getElementById("infoText");
+const payBtn = document.getElementById("payBtn");
+
+// CREATE SEATS
+for(let i=1;i<=TOTAL_SEATS;i++){
+  const seat = document.createElement("div");
+  seat.classList.add("seat");
+  seat.textContent = i;
+
+  if(soldSeats.includes(i)){
+    seat.classList.add("sold");
+  }
+
+  // restore selected state
+  if(selectedSeats.includes(i)){
+    seat.classList.add("selected");
+  }
+
+  seat.addEventListener("click",()=>{
+    if(seat.classList.contains("sold")) return;
+
+    if(seat.classList.contains("selected")){
+      seat.classList.remove("selected");
+      selectedSeats = selectedSeats.filter(s => s !== i);
+    }else{
+      seat.classList.add("selected");
+      selectedSeats.push(i);
+    }
+
+    updateInfo();
+    saveSelection();
+  });
+
+  seatContainer.appendChild(seat);
+}
+
+// 🔹 UPDATE INFO
+function updateInfo(){
+  const total = selectedSeats.length * seatPrice;
+  infoText.textContent =
+    `Selected Seats: ${selectedSeats.length} | Total: ₹${total}`;
+  payBtn.disabled = selectedSeats.length === 0;
+}
+
+// 🔹 SAVE SELECTION
+function saveSelection(){
+  bookingData.seats = selectedSeats;
+  bookingData.seatCount = selectedSeats.length;
+  bookingData.totalAmount = selectedSeats.length * seatPrice;
+  sessionStorage.setItem("bookingData", JSON.stringify(bookingData));
+}
+
+// 🔹 INITIAL LOAD UPDATE
+updateInfo();
+
+// 🔹 PROCEED TO PAYMENT
+payBtn.addEventListener("click",()=>{
+  saveSelection();
+  window.location.href="payment_page.html";
+});
+</script>
+
+</body>
+</html>

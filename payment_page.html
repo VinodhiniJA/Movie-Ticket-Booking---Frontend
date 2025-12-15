@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Payment - CineBook</title>
+
+<style>
+body{
+  background:#121212;
+  color:#f0f0f0;
+  font-family:Segoe UI,Tahoma,Verdana,sans-serif;
+  margin:0;
+}
+
+h1{
+  text-align:center;
+  color:#ff3d00;
+  margin:30px 0;
+}
+
+.container{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:40px;
+  max-width:1000px;
+  margin:0 auto 40px;
+}
+
+.frame{
+  width:420px;
+  height:460px;
+  background:#1f1f1f;
+  border-radius:14px;
+  padding:30px;
+  box-shadow:0 0 25px rgba(255,61,0,0.4);
+  box-sizing:border-box;
+}
+
+.frame h2{
+  color:#ff3d00;
+  text-align:center;
+  margin-bottom:25px;
+}
+
+.form-box{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+label{
+  width:100%;
+  max-width:300px;
+  margin:15px 0 6px;
+  font-weight:600;
+}
+
+input{
+  width:100%;
+  max-width:300px;
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  background:#333;
+  color:white;
+  outline:none;
+  text-align:center;
+}
+
+.pay-btn{
+  width:300px;
+  margin-top:35px;
+  padding:14px;
+  border:none;
+  border-radius:30px;
+  font-size:1.2rem;
+  background:#ff3d00;
+  color:white;
+  cursor:pointer;
+}
+
+.details-content p{
+  margin:12px 0;
+  font-size:1.05rem;
+}
+
+.details-content span{
+  color:#ff3d00;
+  font-weight:700;
+}
+
+@media(max-width:900px){
+  .container{flex-direction:column;}
+}
+</style>
+</head>
+
+<body>
+
+<h1>Payment</h1>
+
+<div class="container">
+
+  <!-- LEFT -->
+  <div class="frame">
+    <h2>Your Information</h2>
+
+    <div class="form-box">
+      <label>Full Name</label>
+      <input type="text" id="fullName">
+
+      <label>Phone</label>
+      <input type="tel" id="phone">
+
+      <label>Email</label>
+      <input type="email" id="email">
+
+      <button class="pay-btn" onclick="goNext()">Pay</button>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="frame">
+    <h2>Booking Details</h2>
+    <div class="details-content" id="detailsBox"></div>
+  </div>
+
+</div>
+
+<script>
+const bookingData = JSON.parse(sessionStorage.getItem("bookingData"));
+const box = document.getElementById("detailsBox");
+
+if(!bookingData){
+  alert("Booking data missing!");
+  window.location.href = "homepage.html";
+}
+
+box.innerHTML = `
+  <p><span>Movie:</span> ${bookingData.movie}</p>
+  <p><span>Theater:</span> ${bookingData.theater}</p>
+  <p><span>Date:</span> ${bookingData.date}</p>
+  <p><span>Time:</span> ${bookingData.time}</p>
+  <p><span>Seats:</span> ${bookingData.seats.join(", ")}</p>
+  <p><span>Seats Count:</span> ${bookingData.seatCount}</p>
+  <p><span>Total Amount:</span> ₹${bookingData.totalAmount}</p>
+`;
+
+function goNext(){
+  const name = document.getElementById("fullName").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const email = document.getElementById("email").value.trim();
+
+  if(name === "" || phone === "" || email === ""){
+    alert("Please fill all your details before proceeding to payment.");
+    return;
+  }
+
+  // (optional) save user info if needed later
+  bookingData.user = { name, phone, email };
+  sessionStorage.setItem("bookingData", JSON.stringify(bookingData));
+
+  window.location.href = "payment_methods.html";
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Booking Confirmation - CineBook</title>
+  <style>
+    body {
+      background: #121212;
+      color: #f0f0f0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 40px 20px;
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    h1 {
+      color: #ff3d00;
+      margin-bottom: 20px;
+    }
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+      color: #ddd;
+    }
+    .checkmark {
+      font-size: 80px;
+      color: #4caf50;
+      margin-bottom: 20px;
+    }
+    button.home-btn {
+      background: #ff3d00;
+      border: none;
+      color: white;
+      padding: 14px 50px;
+      font-size: 1.2rem;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button.home-btn:hover {
+      background: #e63600;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="checkmark">✔️</div>
+  <h1>Booking Confirmed!</h1>
+  <p id="confirmationMsg"></p>
+  <p id="detailsMsg"></p>
+  <button class="home-btn" id="homeBtn">Back to Home</button>
+
+  <script>
+const bookingData = JSON.parse(sessionStorage.getItem("bookingData"));
+
+const confirmationMsg = document.getElementById("confirmationMsg");
+const detailsMsg = document.getElementById("detailsMsg");
+
+if (bookingData) {
+  confirmationMsg.textContent =
+    `Thank you for booking "${bookingData.movie}". 
+     Your tickets have been successfully booked 🎉`;
+
+  detailsMsg.innerHTML = `
+    Theater: CineBook Theater <br>
+    Seats: ${bookingData.seats.join(", ")} <br>
+    Total Paid: ₹${bookingData.totalAmount} <br>
+    Payment Method: ${bookingData.paymentMethod}
+  `;
+}
+
+document.getElementById("homeBtn").onclick = () => {
+  sessionStorage.clear();
+  window.location.href = "homepage.html";
+};
+</script>

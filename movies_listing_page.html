@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Movies Listing - CineBook</title>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
+    body{background:#121212;color:#f0f0f0}
+    a{color:#ff3d00;text-decoration:none}
+    .container{max-width:1200px;margin:auto;padding:20px}
+    header{background:#1f1f1f;padding:15px 20px;display:flex;justify-content:space-between;align-items:center}
+    .logo{font-size:1.8rem;font-weight:bold;color:#ff3d00}
+    nav ul{list-style:none;display:flex;gap:25px}
+    nav ul li a:hover{text-decoration:underline}
+    h1.page-title{text-align:center;margin:30px 0 40px;color:#ff3d00;font-size:2.5rem}
+
+    .movies-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      gap:25px
+    }
+
+    .movie-card{
+      background:#1f1f1f;
+      border-radius:10px;
+      overflow:hidden;
+      box-shadow:0 4px 12px rgba(255,61,0,.3);
+      transition:.3s;
+      cursor:pointer
+    }
+
+    .movie-card:hover{transform:translateY(-8px)}
+    .movie-card img{width:100%;height:270px;object-fit:cover}
+
+    .movie-info{padding:15px}
+    .movie-info h3{color:#ff3d00;margin-bottom:8px}
+    .movie-info p{color:#ccc;margin-bottom:10px}
+    .rating{color:#ffd700;font-weight:bold}
+
+    .pagination{
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      margin:40px 0
+    }
+
+    .pagination button{
+      background:#ff3d00;
+      border:none;
+      color:#fff;
+      padding:10px 18px;
+      border-radius:30px;
+      cursor:pointer
+    }
+
+    .pagination button:disabled{
+      background:#555;
+      cursor:not-allowed
+    }
+
+    footer{
+      background:#1f1f1f;
+      text-align:center;
+      padding:20px;
+      color:#777;
+      margin-top:60px
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="container">
+  <div class="logo">CineBook</div>
+  <nav>
+    <ul>
+      <li><a href="homepage.html">Home</a></li>
+      <li><a href="movies_listing_page.html">Movies</a></li>
+      <li><a href="contact_page.html">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main class="container">
+  <h1 class="page-title">All Movies</h1>
+
+  <div class="movies-grid" id="moviesGrid"></div>
+  <div class="pagination" id="pagination"></div>
+</main>
+
+<footer>
+  &copy; 2024 CineBook. All rights reserved.
+</footer>
+
+<script>
+/* 10 MOVIES */
+const movies = [
+  {title:"The Great Adventure",genre:"Action, Adventure",rating:8.5,
+   poster:"https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
+   link:"movie_details_TheGreatAdventure.html"
+  },
+  {title:"Romance in Paris",genre:"Romance, Drama",rating:7.8,
+   poster:"https://image.tmdb.org/t/p/w500/8Y43POKjjKDGI9MH89NW0NAzzp8.jpg",
+   link:"movie_details_RomanceinParis.html"
+  },
+  {title:"Inception",genre:"Sci-Fi, Thriller",rating:8.8,
+   poster:"https://image.tmdb.org/t/p/w500/edv5CZvWj09upOsy2Y6IwDhK8bt.jpg",
+   link:"movie_details_Inception.html"
+  },
+  {title:"Space Odyssey",genre:"Sci-Fi, Adventure",rating:8.9,
+   poster:"https://image.tmdb.org/t/p/w500/9pkZesKMnblFfKxEhQx45YQ2kIe.jpg",
+   link:"movie_details_SpaceOdyssey.html"
+  },
+  {title:"Guardians of the Galaxy",genre:"Action, Sci-Fi",rating:8.0,
+   poster:"https://insidethemagic.net/wp-content/uploads/2023/04/Collage-Maker-03-Apr-2023-11-33-AM-2045.jpg",
+   link:"movie_details_GuardiansoftheGalaxy.html"
+  },
+  {title:"The Suicide Squad",genre:"Action, Comedy",rating:7.4,
+   poster:"https://image.tmdb.org/t/p/w500/iTQHKziZy9pAAY4hHEDCGPaOvFC.jpg",
+   link:"movie_details_TheSuicideSquad.html"
+  },
+  {title:"The Batman",genre:"Action, Crime",rating:8.3,
+   poster:"https://image.tmdb.org/t/p/w500/74xTEgt7R36Fpooo50r9T25onhq.jpg",
+   link:"movie_details_TheBatman.html"
+  },
+  {title:"Finding Nemo",genre:"Animation, Family",rating:8.1,
+   poster:"https://image.tmdb.org/t/p/w500/eHuGQ10FUzK1mdOY69wF5pGgEf5.jpg",
+   link:"movie_details_FindingNemo.html"
+  },
+  {title:"Thriller Night",genre:"Thriller",rating:7.5,
+   poster:"https://image.tmdb.org/t/p/w500/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg",
+   link:"movie_details_ThrillerNight.html"
+  },
+  {title:"Fantasy Realm",genre:"Fantasy, Adventure",rating:8.3,
+   poster:"https://image.tmdb.org/t/p/w500/xJWPZIYOEFIjZpBL7SVBGnzRYXp.jpg",
+   link:"movie_details_FantasyRealm.html"
+  }
+];
+
+const moviesPerPage = 4;
+let currentPage = parseInt(localStorage.getItem("moviesCurrentPage")) || 1;
+const totalPages = Math.ceil(movies.length / moviesPerPage);
+
+function renderMovies(){
+  const grid=document.getElementById("moviesGrid");
+  grid.innerHTML="";
+  movies.slice((currentPage-1)*moviesPerPage,currentPage*moviesPerPage)
+  .forEach(movie=>{
+    const card=document.createElement("div");
+    card.className="movie-card";
+    card.innerHTML=`
+      <img src="${movie.poster}">
+      <div class="movie-info">
+        <h3>${movie.title}</h3>
+        <p>${movie.genre}</p>
+        <div class="rating">⭐ ${movie.rating}</div>
+      </div>`;
+    card.onclick=()=>{
+      localStorage.setItem("moviesCurrentPage",currentPage);
+      sessionStorage.setItem("selectedMovie",JSON.stringify({
+        title:movie.title,
+        seatPrice:movie.price,
+        seatLayout:movie.layout
+      }));
+      window.location.href=movie.link;
+    };
+    grid.appendChild(card);
+  });
+}
+
+function renderPagination(){
+  const pag=document.getElementById("pagination");
+  pag.innerHTML="";
+  ["Prev",...Array.from({length:totalPages},(_,i)=>i+1),"Next"].forEach(v=>{
+    const b=document.createElement("button");
+    b.textContent=v;
+    if((v==="Prev"&&currentPage===1)||(v==="Next"&&currentPage===totalPages)||(v===currentPage))
+      b.disabled=true;
+    b.onclick=()=>{
+      if(v==="Prev") currentPage--;
+      else if(v==="Next") currentPage++;
+      else currentPage=v;
+      update();
+    };
+    pag.appendChild(b);
+  });
+}
+
+function update(){
+  renderMovies();
+  renderPagination();
+}
+
+
+window.onload = () => {
+  window.scrollTo(0, 0);
+  update();
+};
+</script>
+
+</body>
+</html>

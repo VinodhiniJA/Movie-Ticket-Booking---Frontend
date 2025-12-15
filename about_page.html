@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About Us - CineBook</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Verdana,sans-serif}
+body{background:#121212;color:#f0f0f0;line-height:1.7}
+a{text-decoration:none;color:#ff3d00}
+
+.container{max-width:1100px;margin:auto;padding:0 20px}
+
+/* HEADER */
+header{
+  background:#1f1f1f;
+  padding:15px 0;
+  display:flex;
+  justify-content:space-between;
+  align-items:center
+}
+.logo{
+  font-size:1.8rem;
+  font-weight:bold;
+  color:#ff3d00;
+  letter-spacing:2px;
+  cursor:pointer
+}
+nav ul{
+  list-style:none;
+  display:flex;
+  gap:25px
+}
+
+/* HERO */
+.hero{
+  background:url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1350&q=80')
+  no-repeat center/cover;
+  height:360px;
+  border-radius:14px;
+  margin:30px auto;
+  position:relative;
+  overflow:hidden
+}
+.hero::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.65)
+}
+.hero-content{
+  position:relative;
+  z-index:1;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center
+}
+.hero-content h1{
+  font-size:3rem;
+  color:#ff3d00;
+  margin-bottom:12px
+}
+.hero-content p{
+  font-size:1.2rem;
+  max-width:700px
+}
+
+/* ABOUT CONTENT */
+.about-section{
+  background:#1f1f1f;
+  border-radius:14px;
+  padding:45px;
+  box-shadow:0 5px 20px rgba(255,61,0,.35);
+  margin-bottom:50px
+}
+.about-section h2{
+  color:#ff3d00;
+  font-size:2.2rem;
+  margin-bottom:20px;
+  text-align:center
+}
+.about-section p{
+  font-size:1.1rem;
+  color:#ddd;
+  margin-bottom:20px
+}
+
+/* FEATURES */
+.features{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:25px;
+  margin-top:30px
+}
+.feature-box{
+  background:#151515;
+  padding:25px;
+  border-radius:12px;
+  text-align:center;
+  border:1px solid #333
+}
+.feature-box h3{
+  color:#ff3d00;
+  margin-bottom:10px
+}
+.feature-box p{
+  color:#bbb;
+  font-size:.95rem
+}
+
+/* FOOTER */
+footer{
+  background:#1f1f1f;
+  padding:20px;
+  text-align:center;
+  color:#777
+}
+</style>
+</head>
+
+<body>
+
+<header class="container">
+  <div class="logo" onclick="goHome()">CineBook</div>
+  <nav>
+    <ul>
+      <li><a href="homepage.html">Home</a></li>
+      <li><a href="movies_listing_page.html">Movies</a></li>
+      <li><a href="about_page.html">About</a></li>
+      <li><a href="contact_page.html">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<section class="hero container">
+  <div class="hero-content">
+    <h1>About CineBook</h1>
+    <p>Your trusted partner for a seamless movie ticket booking experience</p>
+  </div>
+</section>
+
+<section class="container about-section">
+  <h2>Who We Are</h2>
+  <p>
+    CineBook is a modern movie ticket booking platform designed for movie lovers
+    who want speed, simplicity, and convenience. From discovering the latest
+    releases to choosing the perfect seat, CineBook ensures a smooth and
+    enjoyable booking journey.
+  </p>
+
+  <p>
+    We focus on user-friendly design, real-time seat availability, secure
+    payments, and instant booking confirmations — all in one place.
+  </p>
+
+  <div class="features">
+    <div class="feature-box">
+      <h3>🎬 Easy Booking</h3>
+      <p>Book movie tickets in just a few clicks with a smooth and intuitive flow.</p>
+    </div>
+
+    <div class="feature-box">
+      <h3>💺 Seat Selection</h3>
+      <p>Choose your favorite seats with real-time availability and pricing.</p>
+    </div>
+
+    <div class="feature-box">
+      <h3>💳 Secure Payments</h3>
+      <p>Multiple payment options with safe and reliable transaction handling.</p>
+    </div>
+
+    <div class="feature-box">
+      <h3>⚡ Fast Confirmation</h3>
+      <p>Instant booking confirmation and ticket details after payment.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  &copy; 2024 CineBook. All rights reserved.
+</footer>
+
+<script>
+function goHome(){
+  window.location.href="homepage.html";
+}
+</script>
+
+</body>
+</html>
